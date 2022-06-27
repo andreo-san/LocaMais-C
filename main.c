@@ -50,12 +50,31 @@ break;
 return 0;
 }
 
+//Menu pós login
+int menuLogado()
+{
+    int opcao;
+    do {
+    printf("=== ESCOLHA UMA OPÇÃO ===\n");
+    printf("1. Alugar um carro\n");
+    printf("2. Devolução de carro alugado\n");
+    printf("3. Listar carros alugados\n");
+    printf("0. Voltar\n");
+    printf("Digite sua opcao: ");
+    scanf("%d", &opcao);
+    if ((opcao < 0) || (opcao > 8))
+    printf ("Opcao Digitada Incorreta!\n");
+    } while ((opcao < 0) || (opcao > 8));
+
+    return opcao;
+}
+
 //Menu de Opcoes
 int menu (void){
 
 int opcao;
 do {
-printf("=== MENU PARA CADASTRO DE PRODUTOS ===\n");
+printf("=== ESCOLHA UMA OPÇÃO ===\n");
 printf("1. Cadastrar\n");
 printf("2. Login\n");
 printf("3. Listar\n");
@@ -136,8 +155,8 @@ if ((sen == clientes.senha) && (clientes.deletado != '*')) {
 }
 
 if (!achei)
-printf ("Usu�rio n�o cadastrado!!\n");
+printf ("Usuário não cadastrado!!\n");
 
 fclose(arq);
-
+menuLogado();
 }
