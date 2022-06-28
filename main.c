@@ -11,6 +11,17 @@ char usuario[10];
 char deletado; // deletado = '*' / nao deletado = ' ' - exclusao logica
 };
 
+// Registro / Tipo de Variavel
+struct tVeiculos {
+int codigo;
+int ocupantes;
+int alugado; //se 1 = alugado, se 0 = disponível
+int diaAlugado;
+int diaDevolucao;
+char modelo[30];
+char deletado; // deletado = '*' / nao deletado = ' ' - exclusao logica
+};
+
 //Prototipos
 int menu();
 void cadastrar();
@@ -43,6 +54,21 @@ case 3:
 printf("===Listar===\n");
 listar();
 break;
+
+case 4:
+printf("===Cadastrar Veículos===\n");
+cadastroDeVeiculos();
+break;
+
+case 5:
+printf("===Listar Veículos===\n");
+listarCarros();
+break;
+
+case 6:
+printf("===Alugar Veículos===\n");
+cadastrarLocacao();
+break;
 }
 }while (op != 0);
 
@@ -62,6 +88,19 @@ int menuLogado()
     printf("0. Voltar\n");
     printf("Digite sua opcao: ");
     scanf("%d", &opcao);
+
+    switch (opcao) {
+
+    case 1:
+    printf("===Listar Veículos===\n");
+    listarCarros();
+    break;
+
+    case 2:
+    printf("===Alugar Veículos===\n");
+    cadastrarLocacao();
+    break;
+    }
     if ((opcao < 0) || (opcao > 8))
     printf ("Opcao Digitada Incorreta!\n");
     } while ((opcao < 0) || (opcao > 8));
@@ -148,7 +187,6 @@ while (fread (&clientes, sizeof(clientes), 1, arq)){
 if ((sen == clientes.senha) && (clientes.deletado != '*')) {
     int ret = strcmp(usuario, clientes.usuario);
         if(ret == 0){
-            printf("Cod %d --- Descricao: %-8s --- Valor R$ %4.2f\n",clientes.senha, clientes.usuario);
             achei = 1;
         }
 }
@@ -159,4 +197,64 @@ printf ("Usuário não cadastrado!!\n");
 
 fclose(arq);
 menuLogado();
+}
+
+
+void cadastroDeVeiculos()
+{
+    struct tVeiculos veiculos;
+    FILE *arq = fopen("veiculos.txt", "ab");
+    if (arq == NULL){
+        printf("Erro ao abrir arquivo");
+        return;
+    }
+
+    printf("=== CADASTRO DE VEÍCULOS ===\n");
+    printf("Digite o modelo do veículo\n");
+    fflush(stdin);
+    gets(veiculos.modelo);
+    printf("Quantas vagas o carro tem\n");
+    scanf("%d", &veiculos.ocupantes);
+
+    veiculos.codigo = rand()%100;
+    veiculos.alugado = 0;
+
+    fwrite (&veiculos, sizeof(veiculos), 1, arq);
+
+    fclose(arq);
+}
+
+//Funcao Listar Carros
+void listarCarros (numVagas, dataRetirada, dataDevolucao){
+
+    struct tVeiculos veiculos;
+    FILE *arq = fopen("veiculos.txt", "rb");
+    if (arq == NULL){
+    printf("Arquivo inexistente!");
+    return;
+    }
+
+    while (fread (&veiculos, sizeof(veiculos), 1, arq))
+        if(veiculos.ocupantes >= numVagas)
+            printf("Modelo %s --- Vagas: %d --- Alugado?(%i) --- Codigo: %i\n",veiculos.modelo, veiculos.ocupantes, veiculos.alugado, veiculos.codigo);
+
+    fclose(arq);
+}
+
+//Cadastro de locação
+void cadastrarLocacao()
+{
+    int numVagas, dataRetirada, dataDevolucao;
+
+    printf("Quantas vagas para o carro?\n");
+    scanf("%i", &numVagas);
+
+    printf("Digite a data de retirada\n");
+    scanf("%i", &dataRetirada);
+
+    printf("Digite a data de devolução\n");
+    scanf("%i", &dataDevolucao);
+
+    listarCarros(numVagas, dataRetirada, dataDevolucao);
+
 }
